@@ -13,5 +13,10 @@ class Usuario extends Model
     protected $fillable = [
         'Nombre','Edad', 'RFC', 'Password', 'Email', 'Telefono', 'estado_id'
     ];
+
+    public function estado()
+    {
+        return $this->hasOne('App\Estado');
+    }
     
 }
