@@ -14,3 +14,9 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('/pruebas', 'PruebasController@index');
+
+Route::get('/test-orm', 'PruebasController@testOrm');
+

@@ -11,4 +11,10 @@ class Estado extends Model
 
      //DATOS DE LA TABLA
      protected $fillable = ['Estado'];
+
+     
+    public function usuarios()
+    {
+        return $this->hasMany('App\Usuario');
+    }
 }
