@@ -15,8 +15,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
+//PRUEBAS
 Route::get('/pruebas', 'PruebasController@index');
-
 Route::get('/test-orm', 'PruebasController@testOrm');
+
+//rutas controlador de usuarios
+Route::post('/api/register', 'UsuariosController@register');
+
+
 
