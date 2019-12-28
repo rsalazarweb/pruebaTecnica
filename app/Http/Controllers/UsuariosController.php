@@ -17,25 +17,66 @@ class UsuariosController extends Controller
         $json = $request->input('json', null);
         //var_dump($json);
         $params = json_decode($json); //Saco el objeto
-
         $params_array = json_decode($json,true); //array de los datos
 
-        //Validar datos
+        if(!empty($params) && !empty($params_array))
+        {
+            //Limpiar datos
+            $params_array = array_map('trim', $params_array);
+
+            //Validar datos
+            $validate = \Validator::make($params_array, [
+                'Nombre' => 'required',
+                'RFC' => 'required',
+                'Password' => 'required',
+                'Email' => 'required|email|unique:usuarios',
+                'Telefono' => 'required',
+                'estado_id' => 'required'
+            ]);
 
 
-        //Cifrar contraseña
+            //Comprobación de los datos
+            if ($validate->fails())
+            {
+                //Validación fallida
+                $data  = array(
+                    'status' => 'error',
+                    'code' => 404,
+                    'message' => 'El usuario no se ha creado correctamente',
+                    'errors' => $validate->errors()
+                );
+                //return redirect()->back()->withInput()->withErrors($validate->errors());
 
-        //Comprobar usuario duplicado
+            } 
+            else 
+            {
+                //Validación pasada correctamente
+                //Cifrar contraseña
 
-        //Código de error HTTP
+                //Comprobar usuario duplicado
 
+                //Código de error HTTP
 
-        //Crear al usuario
-        $data  = array(
-            'status' => 'error',
-            'code' => 404,
-            'message' => 'El usuario no se ha creado correctamente'
-        );
+                //Crear al usuario
+                $data  = array(
+                    'status' => 'success',
+                    'code' => 200,
+                    'message' => 'El usuario se ha creado correctamente',
+                );
+            }
+
+        } 
+        else
+        {
+            $data  = array(
+                'status' => 'error',
+                'code' => 404,
+                'message' => 'Los datos enviados no son correctos'
+            );
+        }
+
+        
+        
 
         return response()->json($data, $data['code']);
     }
