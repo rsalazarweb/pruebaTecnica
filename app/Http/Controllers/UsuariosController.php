@@ -27,9 +27,10 @@ class UsuariosController extends Controller
             //Validar datos
             $validate = \Validator::make($params_array, [
                 'Nombre' => 'required',
+                'Edad' => 'required',
                 'RFC' => 'required',
                 'Password' => 'required',
-                'Email' => 'required|email|unique:usuarios',
+                'Email' => 'required|email|unique:usuarios', //Comprobar usuario duplicado
                 'Telefono' => 'required',
                 'estado_id' => 'required'
             ]);
@@ -51,17 +52,33 @@ class UsuariosController extends Controller
             else 
             {
                 //Validación pasada correctamente
-                //Cifrar contraseña
 
-                //Comprobar usuario duplicado
+                //Cifrar contraseña
+                $pass = password_hash($params->Password, PASSWORD_BCRYPT, ['cost'=>4]);
+                
 
                 //Código de error HTTP
 
                 //Crear al usuario
+
+                $usuario = new Usuario();
+                $usuario->Nombre = $params_array['Nombre'];
+                $usuario->Edad = $params_array['Edad'];
+                $usuario->RFC = $params_array['RFC'];
+                $usuario->Password = $pass;
+                $usuario->Email = $params_array['Email'];
+                $usuario->Telefono = $params_array['Telefono'];
+                $usuario->estado_id = $params_array['estado_id'];
+
+                //Guardar el Usuario en BD
+                $usuario->save();
+
+
                 $data  = array(
                     'status' => 'success',
                     'code' => 200,
                     'message' => 'El usuario se ha creado correctamente',
+                    'usuario' => $usuario
                 );
             }
 
