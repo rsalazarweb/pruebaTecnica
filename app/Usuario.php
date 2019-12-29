@@ -16,7 +16,7 @@ class Usuario extends Model
 
     public function estado()
     {
-        return $this->hasOne('App\Estado');
+        return $this->belongsTo('App\Estado');
     }
     
 }

@@ -14,3 +14,10 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+//Rutas de prueba
+Route::get('/pruebas', 'PruebasController@index');
+Route::get('/test-orm', 'PruebasController@testOrm');
+
+
+
