@@ -20,7 +20,9 @@ Route::get('/pruebas', 'PruebasController@index');
 Route::get('/test-orm', 'PruebasController@testOrm');
 
 //rutas controlador de usuarios
-Route::post('/api/create', 'UsuariosController@create');
+Route::resource('/api/usuarios', 'UsuariosController');
+
+
 
 
 
