@@ -8,14 +8,14 @@ use App\Usuario;
 class PruebasController extends Controller
 {
 
-    public function index()
-    {
-        $animales = ['Perro', 'Gato', 'Tigre'];
+    // public function index()
+    // {
+    //     $animales = ['Perro', 'Gato', 'Tigre'];
 
-        return view('pruebas.index', array(
-            'animales' => $animales
-        ));
-    }
+    //     return view('pruebas.index', array(
+    //         'animales' => $animales
+    //     ));
+    // }
 
     public function testOrm()
     {

@@ -15,9 +15,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//Rutas de prueba
+//PRUEBAS
 Route::get('/pruebas', 'PruebasController@index');
 Route::get('/test-orm', 'PruebasController@testOrm');
+
+//rutas controlador de usuarios
+Route::resource('/api/usuarios', 'UsuariosController');
+
+
 
 
 
