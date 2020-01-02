@@ -65,12 +65,37 @@ class UsuariosController extends Controller
      */
     public function store(Request $request)
     {
-        //Almacenando dato
-        $datosUsuario = request()->all();  
+        //Almacenando datos
+        //$datosUsuario = request()->all();  
+
+        //Validación de datos
+        $campos=[
+            'Nombre' => 'required|string',
+            'Edad' => 'required|numeric',
+            'RFC' => 'required|max:13',
+            'Password' => 'required|string|min:5',
+            'Email' => 'required|email|unique:usuarios', //Comprobar usuario duplicado
+            'Telefono' => 'required',
+            'estado_id' => 'required|numeric'
+        ];
+        
+        $Mensaje=["required"=>'El :attribute es requerido'];
+        $this->validate($request, $campos, $Mensaje);
+
+        //Cifrar contraseña
+        $pass = password_hash($request->Password, PASSWORD_BCRYPT, ['cost'=>4]);
+
+        $usuario = new Usuario();
+        $usuario->Nombre = $request['Nombre'];
+        $usuario->Edad = $request['Edad'];
+        $usuario->RFC = $request['RFC'];
+        $usuario->Password = $pass;
+        $usuario->Email = $request['Email'];
+        $usuario->Telefono = $request['Telefono'];
+        $usuario->estado_id = $request['estado_id'];
 
         $datosUsuario=request()->except('_token');
-        
-        Usuario::insert($datosUsuario);
+        $usuario->save();
 
         //return response()->json($datosUsuario);
         return redirect('/api/usuarios/')->with('Mensaje', 'Usuario agregado con Éxito');
@@ -217,54 +242,46 @@ class UsuariosController extends Controller
     public function update(Request $request, $id)
     {
         
-        /*
-        //Recoger datos por post
-        $json = $request->input('json', null);
-        $params_array = json_decode($json, true);
-             
-        //var_dump($id);
-        //var_dump($params_array);
-        //die();
-        $usuario = Usuario::find($id);
-        var_dump($usuario->id);
-        
-        if(!empty($params_array))
-        {
+       
 
-            //Validar datos
-            $validate = \Validator::make($params_array, [
-                    'Nombre' => 'required',
-                    'Edad' => 'required',
-                    'RFC' => 'required',
-                    'Password' => 'required',
-                    'Email' => 
-                    'required|email|unique:usuarios,'.$usuario->id, //librar el email duplicado
-                    'Telefono' => 'required',
-                    'estado_id' => 'required'
-            ]);
-
-            //Campos sin actualizar
-            unset($params_array['id']);
-            unset($params_array['created_at']);
-            
-            //Actualizar usuario en bd
-            $usuario_update = Usuario::where('id', $id)->update($params_array);
-
-            $data = [
-                'code' => 200,
-                'status' => 'success',
-                'usuario' => $params_array
-            ];
-        } else{
-            $data = [
-                'code' => 400,
-                'status' => 'error',
-                'message' => 'No se ha enviado ningún usuario'
-            ];
-        } */
-
+        $campos=[
+            'Nombre' => 'required|string',
+            'Edad' => 'required|numeric',
+            'RFC' => 'required|max:13',
+            'Password' => 'nullable|string|min:5',
+            'Email' => [
+                'required',
+                Rule::unique('usuarios')->ignore($id),
+            ],//Comprobar usuario duplicado
+            'Telefono' => 'required',
+            'estado_id' => 'required|numeric'
+        ];
+        $Mensaje=["required"=>'El :attribute es requerido'];
+        $this->validate($request, $campos, $Mensaje);
         $datosUsuario=request()->except(['_token', '_method']);
-        Usuario::where('id', '=', $id)->update($datosUsuario);
+
+        if(isset($request->Password))
+        {
+            $pass = password_hash($request->Password, PASSWORD_BCRYPT, ['cost'=>4]);
+
+            $usuario = new Usuario();
+            $usuario->Nombre = $request->Nombre;
+            $usuario->Edad = $request->Edad;
+            $usuario->RFC = $request->RFC;
+            $usuario->Password = $pass;
+            $usuario->Email = $request->Email;
+            $usuario->Telefono = $request->Telefono;
+            $usuario->estado_id = $request->estado_id;
+
+            $arrayUsuario = $usuario->toArray();
+            
+            Usuario::where('id', '=', $id)->update($arrayUsuario);
+
+        }
+         else 
+        {
+            Usuario::where('id', '=', $id)->update(array_filter($datosUsuario));
+        }
 
         // $usuario = Usuario::findOrFail($id);
         // return view('usuarios.edit', compact('usuario'));
