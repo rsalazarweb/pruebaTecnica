@@ -1,13 +1,24 @@
+@extends('usuarios.template.main')
+
+@section('title') 
+    Listado
+@endsection
+
+@section('header')
+    <h1>CRUD de Usuarios</h1>
+@endsection
+
+@section('content')
 
 @if(Session::has('Mensaje')){{
     Session::get('Mensaje')
 }}
 @endif
 
-<a href="{{ url('api/usuarios/create')}}">Agregar Usuario</a>
+<a href="{{ url('api/usuarios/create')}}"  class="btn btn-primary">Agregar Usuario</a><br /><br />
 
-<table class="table table-light">
-    <thead class="thead-light">
+<table class="table table-hover table-bordered">
+    <thead>
         <tr>
             <th>#</th>
             <th>Nombre</th>
@@ -22,27 +33,23 @@
     <tbody>
         @foreach($usuarios as $usuario)
         <tr>
-                <td>{{$usuario->id}}</td>
+                <th scope="row">{{$usuario->id}}</th>
                 <td>{{$usuario->Nombre}}</td>
                 <td>{{$usuario->Edad}}</td>
                 <td>{{$usuario->RFC}}</td>
                 <td>{{$usuario->Email}}</td>
                 <td>{{$usuario->Telefono}}</td>
                 <td>{{$usuario->estado->Estado}}</td>
-                <td><a href="{{ url('/api/usuarios/'.$usuario->id.'/edit') }}">Editar</a></td>
-                <td>
-                    <form  method="post" action="{{ url('/api/usuarios/'.$usuario->id)}}">
+                <td><a href="{{ url('/api/usuarios/'.$usuario->id.'/edit') }}" class="btn btn-success">Editar</a>
+                    <form  method="post" action="{{ url('/api/usuarios/'.$usuario->id)}}" style="display:inline"> | 
                         <!-- Token -->
                         {{csrf_field() }}
                         {{ method_field('DELETE') }}
-                        <button type="submit" onclick="return confirm('Deseas Borrar?');">Borrar</button>
+                        <button type="submit" onclick="return confirm('Deseas Borrar?');" class="btn btn-danger">Borrar</button>
                     </form>
                 </td>
         <tr>
         @endforeach
     </tbody>
 </table>
-
-
-        
-
+@endsection
