@@ -1,16 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Estado;
 use Illuminate\Http\Request;
 
 class EstadosController extends Controller
 {
-    public function storage()
+    public function listarEstados()
     {
         //Mètodo para devolver todos los datos del usuario
-        $estado = Estado::all();
+        $estados = Estado::all();
 
-        return view('usuarios.edit', compact('estado'));
+        return view('usuarios.index', compact('estados'));
     }
 }

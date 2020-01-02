@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 
 use App\Usuario;
+use App\Estado;
 
 use Illuminate\Validation\Rule;
 
@@ -52,8 +53,9 @@ class UsuariosController extends Controller
     public function create(Request $request)
     {
 
+        $estados = Estado::orderBy('id')->get();
         //Retornando vista
-        return view('usuarios.create');
+        return view('usuarios.create')->with('estados', $estados);
     }
 
 
@@ -226,10 +228,18 @@ class UsuariosController extends Controller
      */
     public function edit($id)
     {
+        //Recupero los estados
+        $estados = Estado::orderBy('id')->get();
         //Mètodo para devolver todos los datos del usuario
         $usuario = Usuario::findOrFail($id);
+        //Relación entre usuario y estado
+        $usuario->estado;
+        
+        //Envio los estados a la vista con with
+        return view('usuarios.edit', compact('usuario'))->with('estados', $estados);
 
-        return view('usuarios.edit', compact('usuario'));
+
+        
     }
 
     /**

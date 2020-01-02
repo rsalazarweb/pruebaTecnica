@@ -1,4 +1,4 @@
-{{ $Modo=='crear' ? 'Agregar Usuario':'Modificar Usuario'}}
+
 
     <div class="form-group">
         <label for="Nombre" class="control-label">{{'Nombre'}}</label>
@@ -21,10 +21,20 @@
         <label for="Telefono" class="control-label">{{'Telefono'}}</label>
         <input type="text" class="form-control" name="Telefono" value="{{ isset($usuario->Telefono)?$usuario->Telefono:'' }} ">
     </div>
+    
     <div class="form-group">
         <label for="Estado" class="control-label">{{'Estado'}}</label>
-        <input type="text" class="form-control" name="estado_id" value="{{ isset($usuario->estado->Estado)?$usuario->estado->Estado:'' }} ">
+        <select name="estado_id" id="" class="form-control" >
+        <option value="">--Selecciona Estado --</option>
+        @foreach($estados as $estado)
+        <option value="{{$estado->id}}" @if ($estado->id == $usuario->estado->id) selected @endif>
+            {{$estado->Estado}}
+        </option>
+        @endforeach
     </div>
-
-    <input type="submit" value="{{ $Modo=='crear' ? 'Agregar':'Modificar'}}" class="btn btn-success">
-    <a href="{{ url('api/usuarios')}}" class="btn btn-primary">Regresar</a>
+    </select>
+    
+    <div class="form-group" style="margin-top:30px;">
+        <input type="submit" value="{{ $Modo=='crear' ? 'Agregar':'Modificar'}}" class="btn btn-success">
+        <a href="{{ url('api/usuarios')}}" class="btn btn-primary">Regresar</a><br><br>
+    </div>

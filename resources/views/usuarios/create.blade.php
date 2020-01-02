@@ -23,6 +23,7 @@
     </ul>
 </div>
 @endif
+
 <form method="post" action="{{ url('/api/usuarios')}}" class="form-horizontal">
     <!-- token de seguridad -->
     {{csrf_field() }}

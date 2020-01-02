@@ -10,9 +10,10 @@
 
 @section('content')
 
-@if(Session::has('Mensaje')){{
-    Session::get('Mensaje')
-}}
+@if(Session::has('Mensaje'))
+    <div class="alert alert-success" role="alert">
+        {{Session::get('Mensaje')}}
+    </div>
 @endif
 
 <a href="{{ url('api/usuarios/create')}}"  class="btn btn-primary">Agregar Usuario</a><br /><br />
@@ -52,4 +53,12 @@
         @endforeach
     </tbody>
 </table>
+
+<!-- Paginación -->
+{{ $usuarios->links() }}
+
+@endsection
+
+@section('footer')
+    
 @endsection
