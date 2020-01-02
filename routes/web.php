@@ -16,7 +16,7 @@ Route::get('/', function () {
 });
 
 //PRUEBAS
-Route::get('/pruebas', 'PruebasController@index');
+//Route::get('/template', 'UsuariosController@index');
 Route::get('/test-orm', 'PruebasController@testOrm');
 
 //rutas controlador de usuarios
