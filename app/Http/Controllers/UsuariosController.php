@@ -21,7 +21,7 @@ class UsuariosController extends Controller
      */
     public function index()
     {
-        $usuarios = Usuario::paginate(3);
+        $usuarios = Usuario::paginate(20);
 
         return view('usuarios.index', array(
             'usuarios' => $usuarios
