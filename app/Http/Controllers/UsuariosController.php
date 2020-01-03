@@ -72,12 +72,12 @@ class UsuariosController extends Controller
 
         //Validación de datos
         $campos=[
-            'Nombre' => 'required|string',
+            'Nombre' => 'required|string|min:3|max:35',
             'Edad' => 'required|numeric',
-            'RFC' => 'required|max:13',
+            'RFC' => 'required|max:13|min:10',
             'Password' => 'required|string|min:5',
             'Email' => 'required|email|unique:usuarios', //Comprobar usuario duplicado
-            'Telefono' => 'required',
+            'Telefono' => 'required|min:8',
             'estado_id' => 'required|numeric'
         ];
         
@@ -99,96 +99,17 @@ class UsuariosController extends Controller
         $datosUsuario=request()->except('_token');
         $usuario->save();
 
-        //return response()->json($datosUsuario);
-        return redirect('/api/usuarios/')->with('Mensaje', 'Usuario agregado con Éxito');
+        $data  = array(
+                    'status' => 'success',
+                    'code' => 200,
+                    'message' => 'El usuario se ha creado correctamente',
+                    'usuario' => $usuario
+                     );  
 
-        
-
-
-        // //Recoger datos de usuario por POST
-        // $json = $request->input('json', null);
-        // //var_dump($json);
-        // $params = json_decode($json); //Saco el objeto
-        // $params_array = json_decode($json,true); //array de los datos
-
-        // if(!empty($params) && !empty($params_array))
-        // {
-        //     //Limpiar datos
-        //     $params_array = array_map('trim', $params_array);
-
-        //     //Validar datos
-        //     $validate = \Validator::make($params_array, [
-        //         'Nombre' => 'required',
-        //         'Edad' => 'required',
-        //         'RFC' => 'required',
-        //         'Password' => 'required',
-        //         'Email' => 'required|email|unique:usuarios', //Comprobar usuario duplicado
-        //         'Telefono' => 'required',
-        //         'estado_id' => 'required'
-        //     ]);
-
-
-        //     //Comprobación de los datos
-        //     if ($validate->fails())
-        //     {
-        //         //Validación fallida
-        //         $data  = array(
-        //             'status' => 'error',
-        //             'code' => 404,
-        //             'message' => 'El usuario no se ha creado correctamente',
-        //             'errors' => $validate->errors()
-        //         );
-        //         //return redirect()->back()->withInput()->withErrors($validate->errors());
-
-        //     } 
-        //     else 
-        //     {
-        //         //Validación pasada correctamente
-
-        //         //Cifrar contraseña
-        //         $pass = password_hash($params->Password, PASSWORD_BCRYPT, ['cost'=>4]);
-                
-
-        //         //Código de error HTTP
-
-        //         //Crear al usuario
-
-        //         $usuario = new Usuario();
-        //         $usuario->Nombre = $params_array['Nombre'];
-        //         $usuario->Edad = $params_array['Edad'];
-        //         $usuario->RFC = $params_array['RFC'];
-        //         $usuario->Password = $pass;
-        //         $usuario->Email = $params_array['Email'];
-        //         $usuario->Telefono = $params_array['Telefono'];
-        //         $usuario->estado_id = $params_array['estado_id'];
-
-        //         //Guardar el Usuario en BD
-        //         $usuario->save();
-
-
-        //         $data  = array(
-        //             'status' => 'success',
-        //             'code' => 200,
-        //             'message' => 'El usuario se ha creado correctamente',
-        //             'usuario' => $usuario
-        //         );  
-        //     }
-
-        // } 
-        // else
-        // {
-        //     $data  = array(
-        //         'status' => 'error',
-        //         'code' => 404,
-        //         'message' => 'Los datos enviados no son correctos'
-        //     );
-        // }
-
-        
-        
-
-        // return response()->json($data, $data['code']);
-     
+        //Datos en formato json
+        return response()->json($data, $data['code']);
+        //Vista redirect
+        //return redirect('/api/usuarios/')->with('Mensaje', 'Usuario agregado con Éxito');
     }
 
     /**
@@ -255,15 +176,16 @@ class UsuariosController extends Controller
        
 
         $campos=[
-            'Nombre' => 'required|string',
+            'Nombre' => 'required|string|min:3|max:35',
             'Edad' => 'required|numeric',
-            'RFC' => 'required|max:13',
+            'RFC' => 'required|max:13|min:10',
             'Password' => 'nullable|string|min:5',
             'Email' => [
                 'required',
+                'email',
                 Rule::unique('usuarios')->ignore($id),
             ],//Comprobar usuario duplicado
-            'Telefono' => 'required',
+            'Telefono' => 'required|min:8',
             'estado_id' => 'required|numeric'
         ];
         $Mensaje=["required"=>'El :attribute es requerido'];
@@ -296,7 +218,14 @@ class UsuariosController extends Controller
         // $usuario = Usuario::findOrFail($id);
         // return view('usuarios.edit', compact('usuario'));
 
-        return redirect('api/usuarios')->with('Mensaje', 'Usuario actualizado con Éxito');
+        //Retorno de datos en JSON
+        $data = [
+            'code' => 200,
+            'status' => 'success',
+            'post' =>  $datosUsuario
+        ];
+        return response()->json($data, $data['code']);
+        //return redirect('api/usuarios')->with('Mensaje', 'Usuario actualizado con Éxito');
     }
 
     /**
@@ -308,22 +237,23 @@ class UsuariosController extends Controller
     public function destroy($id)
     {
         
-        /*Primer método
+        //Primer método
         //Conseguir el registro
         $usuario = Usuario::find($id);
         //Borrar registro
         $usuario->delete();
         //Devolver algo
-        /*$data = [
+        $data = [
             'code' => 200,
             'status' => 'success',
             'post' =>  $usuario
         ];
-        //return response()->json($data, $data['code']); */
+        return response()->json($data, $data['code']);
+
 
         //Segundo Método
         //Regreso a la vista
-        Usuario::destroy($id);
-        return redirect('/api/usuarios/')->with('Mensaje', 'Usuario eliminado con Éxito');;
+        // Usuario::destroy($id);
+        // return redirect('/api/usuarios/')->with('Mensaje', 'Usuario eliminado con Éxito');
     }
 }
